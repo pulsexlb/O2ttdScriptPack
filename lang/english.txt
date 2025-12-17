@@ -1,0 +1,2 @@
+WELCOME_MESSAGE :Hello {COMPANY}!
+TAX_MESSAGE :本季度，贵公司收入{NUM}，根据政策，按照{NUM}%比例进行收税。{}贵公司本月缴纳所得税{NUM}
