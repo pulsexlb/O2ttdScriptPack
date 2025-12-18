@@ -6,13 +6,19 @@ require("tax.nut");
 
 // 主游戏
 class MainClass extends GSController {
-	tax = Tax();
+	_data_loaded = false;  // 是否完成了存档加载
+	tax = null;
 	constructor() {}
 }
 
 // 开始
 function MainClass::Start() {
 	GSLog.Info("O2ttd Script Pack Inited!");
+
+	if (!this._data_loaded) {
+		this.tax = Tax(null);
+		this._data_loaded = true;
+	}
 
 	// 存储上一次处理的经济月份
 	local last_economy_month = GSDate.GetMonth(GSDate.GetCurrentDate());
@@ -63,7 +69,21 @@ function MainClass::EndOfMonth() {
 }
 
 function MainClass::Save() {
-	return {};
+	GSLog.Info("Saving game...");
+	return {tax = this.tax.SaveGameData()};
 }
 
-function MainClass::Load() {}
+function MainClass::Load(version, data) {
+	GSLog.Info("Loading data from savegame made with version " + version + " of the game script");
+
+	if(data.rawin("tax")) {
+		local tax_data = data.rawget("tax");
+		this.tax = Tax(tax_data);
+		GSLog.Info("Found tax data in save file");
+	} else {
+		this.tax = Tax(null);
+		GSLog.Warning("No tax data found - initialising new tax")
+	}
+
+	this._data_loaded = true;
+}

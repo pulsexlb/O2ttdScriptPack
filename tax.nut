@@ -2,7 +2,13 @@
 class Tax {
 	quarter = 0;
 	next_tax_loop = 2;
-	constructor() {}
+	constructor(data) {
+		if (data) {
+			this.quarter = data.quarter;
+			this.next_tax_loop = data.next_tax_loop;
+            GSLog.Info("Loaded previous tax quarter = " + this.quarter + " next_tax_loop = " + this.next_tax_loop);
+		}
+	}
 }
 
 function Tax::TaxQuarterly() {
@@ -36,4 +42,12 @@ function Tax::TaxQuarterly() {
 		local next_loop = this.next_tax_loop;
 		this.next_tax_loop = next_loop - 1;
 	}
+}
+
+// 返回保存游戏数据
+function Tax::SaveGameData() {
+	return {
+		quarter = this.quarter,
+		next_tax_loop = this.next_tax_loop
+	};
 }
