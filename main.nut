@@ -56,7 +56,7 @@ function MainClass::HandleEvents() {
 
 				Story.ShowMessage(company_id, GSText(GSText.WELCOME_MESSAGE, company_id));
 
-				GSCompany.ChangeBankBalance(company_id, 4000, GSCompany.EXPENSES_OTHER, GSMap.TILE_INVALID);
+				GSCompany.ChangeBankBalance(company_id, 1000000, GSCompany.EXPENSES_OTHER, GSMap.TILE_INVALID);
 				break;
 			}
 		}

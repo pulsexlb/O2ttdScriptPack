@@ -6,7 +6,7 @@ class Tax {
 		if (data) {
 			this.quarter = data.quarter;
 			this.next_tax_loop = data.next_tax_loop;
-            GSLog.Info("Loaded previous tax quarter = " + this.quarter + " next_tax_loop = " + this.next_tax_loop);
+			GSLog.Info("Loaded previous tax quarter = " + this.quarter + " next_tax_loop = " + this.next_tax_loop);
 		}
 	}
 }
@@ -16,16 +16,34 @@ function Tax::TaxQuarterly() {
 	if (next_tax_loop == 0) {
 		GSLog.Info("Processing tax for quarter " + this.quarter);
 
+		// 获取全部公司平均价值
+		local value_sum = 0;
+		local company_num_sum = 0;
+		for (local id = GSCompany.COMPANY_FIRST; id <= GSCompany.COMPANY_LAST; id++) {
+			local resolved = GSCompany.ResolveCompanyID(id);
+			if (resolved != GSCompany.COMPANY_INVALID) {
+				local val = value_sum;
+				value_sum = val + GSCompany.GetQuarterlyCompanyValue(id, 1);
+				local com = company_num_sum;
+				company_num_sum = com + 1;
+			}
+		}
+		local average_value = value_sum / company_num_sum;
+
+		// 收税
+		local basic_tax_rate = 0.25; // 25%基本税率
 		for (local id = GSCompany.COMPANY_FIRST; id <= GSCompany.COMPANY_LAST; id++) {
 			local resolved = GSCompany.ResolveCompanyID(id);
 			if (resolved != GSCompany.COMPANY_INVALID) {
 				local income = GSCompany.GetQuarterlyIncome(id, 1);
 
 				if (income > 0) {
-					local tax_rate = 0.25; // 25%税率
+					local current_value = GSCompany.GetQuarterlyCompanyValue(id, 1);
+					local tax_rate = basic_tax_rate * current_value / average_value;
+
 					local tax_amount = (income * tax_rate).tointeger();
 
-					GSLog.Info("Company " + id + " income: " + income + ", tax: " + tax_amount);
+					GSLog.Info("Company " + id + " tax rate: " + tax_rate + ", income: " + income + ", tax: " + tax_amount);
 
 					// 从公司账户扣除税款
 					GSCompany.ChangeBankBalance(id, -tax_amount, GSCompany.EXPENSES_OTHER, GSMap.TILE_INVALID);
