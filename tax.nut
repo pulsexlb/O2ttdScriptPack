@@ -1,3 +1,5 @@
+require("general.nut");
+
 // 税收
 class Tax {
 	quarter = 0;
@@ -17,18 +19,7 @@ function Tax::TaxQuarterly() {
 		GSLog.Info("Processing tax for quarter " + this.quarter);
 
 		// 获取全部公司平均价值
-		local value_sum = 0;
-		local company_num_sum = 0;
-		for (local id = GSCompany.COMPANY_FIRST; id <= GSCompany.COMPANY_LAST; id++) {
-			local resolved = GSCompany.ResolveCompanyID(id);
-			if (resolved != GSCompany.COMPANY_INVALID) {
-				local val = value_sum;
-				value_sum = val + GSCompany.GetQuarterlyCompanyValue(id, 1);
-				local com = company_num_sum;
-				company_num_sum = com + 1;
-			}
-		}
-		local average_value = value_sum / company_num_sum;
+		local average_value = GetAverageValue(1);
 
 		// 收税
 		local basic_tax_rate = 0.25; // 25%基本税率
@@ -53,12 +44,10 @@ function Tax::TaxQuarterly() {
 				}
 			}
 		}
-		local next_quarter = this.quarter + 1;
-		this.quarter = next_quarter;
+		this.quarter += 1;
 		this.next_tax_loop = 2;
 	} else {
-		local next_loop = this.next_tax_loop;
-		this.next_tax_loop = next_loop - 1;
+		this.next_tax_loop -= 1;
 	}
 }
 

@@ -3,11 +3,13 @@ Log <- SuperLib.Log;
 Story <- SuperLib.Story;
 
 require("tax.nut");
+require("environmental.nut")
 
 // 主游戏
 class MainClass extends GSController {
-	_data_loaded = false;  // 是否完成了存档加载
+	_data_loaded = false; // 是否完成了存档加载
 	tax = null;
+	environmental = null
 	constructor() {}
 }
 
@@ -17,6 +19,7 @@ function MainClass::Start() {
 
 	if (!this._data_loaded) {
 		this.tax = Tax(null);
+		this.environmental = Environmental();
 		this._data_loaded = true;
 	}
 
@@ -30,8 +33,12 @@ function MainClass::Start() {
 		local current_date = GSDate.GetCurrentDate();
 		if (last_loop_date != null) {
 			local month = GSDate.GetMonth(current_date);
+			local year = GSDate.GetYear(current_date);
 			if (month != GSDate.GetMonth(last_loop_date)) {
 				this.EndOfMonth();
+			}
+			if (year != GSDate.GetYear(last_loop_date)) {
+				this.EndOfYear();
 			}
 		}
 		last_loop_date = current_date;
@@ -68,15 +75,23 @@ function MainClass::EndOfMonth() {
 	this.tax.TaxQuarterly();
 }
 
+function MainClass::EndOfYear() {
+	// 环保税
+	this.environmental.TaxPlaneYearAnnual();
+
+}
+
 function MainClass::Save() {
 	GSLog.Info("Saving game...");
-	return {tax = this.tax.SaveGameData()};
+	return {
+		tax = this.tax.SaveGameData()
+	};
 }
 
 function MainClass::Load(version, data) {
 	GSLog.Info("Loading data from savegame made with version " + version + " of the game script");
 
-	if(data.rawin("tax")) {
+	if (data.rawin("tax")) {
 		local tax_data = data.rawget("tax");
 		this.tax = Tax(tax_data);
 		GSLog.Info("Found tax data in save file");
@@ -84,6 +99,8 @@ function MainClass::Load(version, data) {
 		this.tax = Tax(null);
 		GSLog.Warning("No tax data found - initialising new tax")
 	}
+
+	this.environmental = Environmental();
 
 	this._data_loaded = true;
 }
