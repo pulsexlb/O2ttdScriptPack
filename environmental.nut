@@ -1,7 +1,10 @@
 require("general.nut");
 
 class Environmental {
-	constructor() {}
+	plane_tax_rate = null;
+	constructor(plane_tax_rate) {
+		this.plane_tax_rate = plane_tax_rate.tofloat() / 100.0;
+	}
 }
 
 function Environmental::TaxPlaneYearAnnual() {
@@ -45,7 +48,7 @@ function Environmental::TaxPlaneYearAnnual() {
 
 	foreach(company_key, air_income in company_air_income) {
 		local company = company_key.tointeger();
-		local tax_rate = 0.75;
+		local tax_rate = this.plane_tax_rate;
 		local tax_amount = (air_income * tax_rate).tointeger();
 		if (air_income > 0) {
 			GSLog.Info("Plane Tax: Company " + company + " tax rate: " + tax_rate + ", income: " + air_income + ", tax: " + tax_amount);

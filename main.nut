@@ -4,12 +4,14 @@ Story <- SuperLib.Story;
 
 require("tax.nut");
 require("environmental.nut")
+require("peaks-and-thoughs.nut")
 
 // 主游戏
 class MainClass extends GSController {
 	_data_loaded = false; // 是否完成了存档加载
 	tax = null;
-	environmental = null
+	environmental = null;
+	peaks_and_thoughs = null;
 	constructor() {}
 }
 
@@ -17,31 +19,48 @@ class MainClass extends GSController {
 function MainClass::Start() {
 	GSLog.Info("O2ttd Script Pack Inited!");
 
-	if (!this._data_loaded) {
-		this.tax = Tax(null);
-		this.environmental = Environmental();
+	if (!_data_loaded) {
+		// tax
+		local base_rates = MainClass.GetSetting("tax-base");
+		this.tax = Tax(base_rates, null);
+
+		// environmental
+		local plane_tax_rate = MainClass.GetSetting("environment-plane-tax");
+		this.environmental = Environmental(plane_tax_rate);
+
+		// peaks and thoughs
+		local preset_setting = MainClass.GetSetting("peaks-preset");
+		local base_rates = MainClass.GetSetting("peaks-base");
+		this.peaks_and_thoughs = PeaksAndThoughs(preset_setting, base_rates);
+
 		this._data_loaded = true;
 	}
 
 	// 存储上一次处理的经济月份
-	local last_economy_month = GSDate.GetMonth(GSDate.GetCurrentDate());
-	local last_economy_year = GSDate.GetYear(GSDate.GetCurrentDate());
-
 	local last_loop_date = GSDate.GetCurrentDate();
+	local last_loop_tick = GSDate.GetCurrentScaledDateTicks();
+
 
 	while (1) {
 		local current_date = GSDate.GetCurrentDate();
+		local current_tick = GSDate.GetCurrentScaledDateTicks();
 		if (last_loop_date != null) {
 			local month = GSDate.GetMonth(current_date);
 			local year = GSDate.GetYear(current_date);
+			local hour = GSDate.GetHour(current_tick);
+
 			if (month != GSDate.GetMonth(last_loop_date)) {
-				this.EndOfMonth();
+				this.EndOfMonth(month);
 			}
 			if (year != GSDate.GetYear(last_loop_date)) {
-				this.EndOfYear();
+				this.EndOfYear(year);
+			}
+			if (hour != GSDate.GetHour(last_loop_tick)) {
+				this.EndOfHour(hour);
 			}
 		}
 		last_loop_date = current_date;
+		last_loop_tick = current_tick
 
 		this.HandleEvents();
 
@@ -70,15 +89,20 @@ function MainClass::HandleEvents() {
 	}
 }
 
-function MainClass::EndOfMonth() {
+function MainClass::EndOfMonth(month) {
 	// 收税
 	this.tax.TaxQuarterly();
 }
 
-function MainClass::EndOfYear() {
+function MainClass::EndOfYear(year) {
 	// 环保税
 	this.environmental.TaxPlaneYearAnnual();
 
+}
+
+function MainClass::EndOfHour(hour) {
+	// 动态客流
+	this.peaks_and_thoughs.Run(hour);
 }
 
 function MainClass::Save() {
@@ -91,16 +115,25 @@ function MainClass::Save() {
 function MainClass::Load(version, data) {
 	GSLog.Info("Loading data from savegame made with version " + version + " of the game script");
 
+	// tax
+	local base_rates = MainClass.GetSetting("tax-base");
 	if (data.rawin("tax")) {
 		local tax_data = data.rawget("tax");
-		this.tax = Tax(tax_data);
+		this.tax = Tax(base_rates, tax_data);
 		GSLog.Info("Found tax data in save file");
 	} else {
-		this.tax = Tax(null);
+		this.tax = Tax(base_rates, null);
 		GSLog.Warning("No tax data found - initialising new tax")
 	}
 
-	this.environmental = Environmental();
+	// environmental
+	local plane_tax_rate = MainClass.GetSetting("environment-plane-tax");
+	this.environmental = Environmental(plane_tax_rate);
+
+	// peaks and thoughs
+	local preset_setting = MainClass.GetSetting("peaks-preset");
+	local base_rates = MainClass.GetSetting("peaks-base");
+	this.peaks_and_thoughs = PeaksAndThoughs(preset_setting, base_rates);
 
 	this._data_loaded = true;
 }
