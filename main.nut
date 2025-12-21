@@ -12,6 +12,8 @@ class MainClass extends GSController {
 	tax = null;
 	environmental = null;
 	peaks_and_thoughs = null;
+	_tax_base_rate = null;
+	_plane_tax_rate = null
 	constructor() {}
 }
 
@@ -19,14 +21,15 @@ class MainClass extends GSController {
 function MainClass::Start() {
 	GSLog.Info("O2ttd Script Pack Inited!");
 
+
+	this._tax_base_rate = MainClass.GetSetting("tax-base");
+	this._plane_tax_rate = MainClass.GetSetting("environment-plane-tax");
 	if (!_data_loaded) {
 		// tax
-		local base_rates = MainClass.GetSetting("tax-base");
-		this.tax = Tax(base_rates, null);
+		this.tax = Tax(this._tax_base_rate, null);
 
 		// environmental
-		local plane_tax_rate = MainClass.GetSetting("environment-plane-tax");
-		this.environmental = Environmental(plane_tax_rate);
+		this.environmental = Environmental(this._plane_tax_rate);
 
 		// peaks and thoughs
 		local preset_setting = MainClass.GetSetting("peaks-preset");
@@ -80,7 +83,7 @@ function MainClass::HandleEvents() {
 				local company_event = GSEventCompanyNew.Convert(ev);
 				local company_id = company_event.GetCompanyID();
 
-				Story.ShowMessage(company_id, GSText(GSText.WELCOME_MESSAGE, company_id));
+				Story.ShowMessage(company_id, GSText(GSText.WELCOME_MESSAGE, company_id, this._tax_base_rate, this._plane_tax_rate));
 
 				GSCompany.ChangeBankBalance(company_id, GetAverageValue(1), GSCompany.EXPENSES_OTHER, GSMap.TILE_INVALID);
 				break;

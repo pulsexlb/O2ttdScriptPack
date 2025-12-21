@@ -60,10 +60,10 @@ class FMainClass extends GSInfo {
 		AddSetting({
 			name = "tax-base",
 			description = "Tax: Base tax rate(%)(set 0 to disable)",
-			easy_value = 1,
-			medium_value = 1,
-			hard_value = 1,
-			custom_value = 1,
+			easy_value = 15,
+			medium_value = 25,
+			hard_value = 30,
+			custom_value = 25,
 			flags = CONFIG_INGAME,
 			min_value = 0,
 			max_value = 100
@@ -71,10 +71,10 @@ class FMainClass extends GSInfo {
 		AddSetting({
 			name = "environment-plane-tax",
 			description = "Environmental: Plane tax rate(%)(set 0 to disable)",
-			easy_value = 1,
-			medium_value = 1,
-			hard_value = 1,
-			custom_value = 1,
+			easy_value = 50,
+			medium_value = 65,
+			hard_value = 80,
+			custom_value = 75,
 			flags = CONFIG_INGAME,
 			min_value = 0,
 			max_value = 100
