@@ -90,7 +90,11 @@ function MainClass::HandleEvents() {
 				local company_event = GSEventCompanyNew.Convert(ev);
 				local company_id = company_event.GetCompanyID();
 
-				Story.ShowMessage(company_id, GSText(GSText.WELCOME_MESSAGE, company_id, company_id % 2 + 1 this._tax_base_rate, this._plane_tax_rate));
+				Story.ShowMessage(company_id, GSText(GSText.WELCOME_MESSAGE, company_id, company_id % 2 + 1,
+                                GSText(GSText.SCRIPT_INTRODUCE_NEW_TAX, this._tax_base_rate),
+                                GSText(GSText.SCRIPT_INTRODUCE_ENVIRONMENTALISM, this._plane_tax_rate),
+                                GSText(GSText.SCRIPT_INTRODUCE_TEAMS_INFRASTRUCTURE_SHARING),
+                                GSText(GSText.SCRIPT_INTRODUCE_OTHER_MATTERS)));
 
 				GSCompany.ChangeBankBalance(company_id, GetAverageValue(1), GSCompany.EXPENSES_OTHER, GSMap.TILE_INVALID);
 				break;

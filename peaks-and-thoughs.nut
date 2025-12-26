@@ -31,7 +31,6 @@ class PeaksAndThoughs {
 }
 
 function PeaksAndThoughs::Run(current_time) {
-	//failsafe
 	if (current_time >= 24) {
 		GSLog.Warning("GetHour returned " + current_time);
 		GSLog.Info("Hours set to 0");
