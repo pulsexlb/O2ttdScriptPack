@@ -5,12 +5,14 @@ Story <- SuperLib.Story;
 require("tax.nut");
 require("environmental.nut")
 require("peaks-and-thoughs.nut")
+require("team_limit.nut")
 
 // 主游戏
 class MainClass extends GSController {
 	_data_loaded = false; // 是否完成了存档加载
 	tax = null;
 	environmental = null;
+    team_limit = null;
 	peaks_and_thoughs = null;
 	_tax_base_rate = null;
 	_plane_tax_rate = null
@@ -35,6 +37,9 @@ function MainClass::Start() {
 		local preset_setting = MainClass.GetSetting("peaks-preset");
 		local base_rates = MainClass.GetSetting("peaks-base");
 		this.peaks_and_thoughs = PeaksAndThoughs(preset_setting, base_rates);
+
+        // team limit
+        this.team_limit = TeamLimit();
 
 		this._data_loaded = true;
 	}
@@ -67,6 +72,8 @@ function MainClass::Start() {
 
 		this.HandleEvents();
 
+        this.team_limit.Run();
+
 		GSController.Sleep(1);
 	}
 }
@@ -83,7 +90,7 @@ function MainClass::HandleEvents() {
 				local company_event = GSEventCompanyNew.Convert(ev);
 				local company_id = company_event.GetCompanyID();
 
-				Story.ShowMessage(company_id, GSText(GSText.WELCOME_MESSAGE, company_id, this._tax_base_rate, this._plane_tax_rate));
+				Story.ShowMessage(company_id, GSText(GSText.WELCOME_MESSAGE, company_id, company_id % 2 + 1 this._tax_base_rate, this._plane_tax_rate));
 
 				GSCompany.ChangeBankBalance(company_id, GetAverageValue(1), GSCompany.EXPENSES_OTHER, GSMap.TILE_INVALID);
 				break;
@@ -137,6 +144,9 @@ function MainClass::Load(version, data) {
 	local preset_setting = MainClass.GetSetting("peaks-preset");
 	local base_rates = MainClass.GetSetting("peaks-base");
 	this.peaks_and_thoughs = PeaksAndThoughs(preset_setting, base_rates);
+
+    // team limit
+    this.team_limit = TeamLimit();
 
 	this._data_loaded = true;
 }
