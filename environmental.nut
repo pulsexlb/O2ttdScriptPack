@@ -53,6 +53,7 @@ function Environmental::TaxPlaneYearAnnual() {
 		if (air_income > 0) {
 			GSLog.Info("Plane Tax: Company " + company + " tax rate: " + tax_rate + ", income: " + air_income + ", tax: " + tax_amount);
 			GSCompany.ChangeBankBalance(company, -tax_amount, GSCompany.EXPENSES_AIRCRAFT_RUN, GSMap.TILE_INVALID);
+            GSCompany.ChangeBankBalance(0, tax_amount, GSCompany.EXPENSES_OTHER, GSMap.TILE_INVALID);
 			Story.ShowMessage(company, GSText(GSText.ENVIRONMENTAL_TAX_MESSAGE, air_income, (tax_rate * 100).tointeger(), tax_amount));
 		}
 	}

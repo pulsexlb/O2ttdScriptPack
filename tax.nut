@@ -40,6 +40,7 @@ function Tax::TaxQuarterly() {
 
 					// 从公司账户扣除税款
 					GSCompany.ChangeBankBalance(id, -tax_amount, GSCompany.EXPENSES_OTHER, GSMap.TILE_INVALID);
+                    GSCompany.ChangeBankBalance(0, tax_amount, GSCompany.EXPENSES_OTHER, GSMap.TILE_INVALID);
 					Story.ShowMessage(id, GSText(GSText.TAX_MESSAGE, income, (tax_rate * 100).tointeger(), tax_amount));
 				} else {
 					GSLog.Info("Company " + id + " has no income this quarter (" + this.quarter + ")");

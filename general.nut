@@ -4,7 +4,7 @@ function GetAverageValue(quarter) {
 	local company_num_sum = 0;
 	for (local id = GSCompany.COMPANY_FIRST; id <= GSCompany.COMPANY_LAST; id++) {
 		local resolved = GSCompany.ResolveCompanyID(id);
-		if (resolved != GSCompany.COMPANY_INVALID) {
+		if (resolved != GSCompany.COMPANY_INVALID && resolved != 0) {  // 公司0特殊不计入
 			value_sum += GSCompany.GetQuarterlyCompanyValue(id, quarter);
 			company_num_sum += 1;
 		}
