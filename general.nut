@@ -9,5 +9,8 @@ function GetAverageValue(quarter) {
 			company_num_sum += 1;
 		}
 	}
+    if (company_num_sum == 0) {
+        return 0;
+    }
 	return value_sum / company_num_sum;
 }
