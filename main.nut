@@ -15,7 +15,8 @@ class MainClass extends GSController {
     team_limit = null;
 	peaks_and_thoughs = null;
 	_tax_base_rate = null;
-	_plane_tax_rate = null
+	_plane_tax_rate = null;
+    _system_set_name = []; // 上个事件处理后由脚本设置的公司名称的公司id列表(防止重复处理)
 	constructor() {}
 }
 
@@ -91,18 +92,47 @@ function MainClass::HandleEvents() {
 				local company_id = company_event.GetCompanyID();
 
                 if (company_id != 0){
-                    Story.ShowMessage(company_id, GSText(GSText.WELCOME_MESSAGE, company_id, company_id % 2 + 1,
+                    local team_number = company_id % 2 + 1
+                    Story.ShowMessage(company_id, GSText(GSText.WELCOME_MESSAGE, company_id, team_number,
                                     GSText(GSText.SCRIPT_INTRODUCE_NEW_TAX, this._tax_base_rate),
                                     GSText(GSText.SCRIPT_INTRODUCE_ENVIRONMENTALISM, this._plane_tax_rate),
                                     GSText(GSText.SCRIPT_INTRODUCE_TEAMS_INFRASTRUCTURE_SHARING),
                                     GSText(GSText.SCRIPT_INTRODUCE_OTHER_MATTERS)));
                     GSCompany.ChangeBankBalance(company_id, GetAverageValue(1), GSCompany.EXPENSES_OTHER, GSMap.TILE_INVALID);
+
+                    local company_mode = GSCompanyMode(company_id);
+                    local name = GSCompany.GetName(company_id);
+                    GSCompany.SetName("[Team " + team_number + "]" + name);
+                    if (!(company_id in this._system_set_name)){
+                        _system_set_name.push(company_id);
+                    }
+
                 } else {
                     GSCompany.ChangeBankBalance(company_id, 10000000, GSCompany.EXPENSES_OTHER, GSMap.TILE_INVALID);
                 }
 
 				break;
 			}
+            // 公司更名
+            case GSEvent.ET_COMPANY_RENAMED: {
+                local company_event = GSEventCompanyRenamed.Convert(ev);
+                local company_id = company_event.GetCompanyID();
+                local idx = GetArrayIndex(this._system_set_name, company_id);
+                if (idx != null) {
+                    this._system_set_name.remove(idx);
+                    return;
+                }
+                local company_new_name = company_event.GetNewName();
+                local company_mode = GSCompanyMode(company_id);
+                if (company_id != 0){
+                    local team_number = company_id % 2 + 1
+                    GSCompany.SetName("[Team " + team_number + "]" + company_new_name);
+                    if (!(company_id in this._system_set_name)){
+                        _system_set_name.push(company_id);
+                    }
+                }
+                break;
+            }
 		}
 	}
 }

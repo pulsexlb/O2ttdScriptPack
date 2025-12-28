@@ -14,3 +14,11 @@ function GetAverageValue(quarter) {
     }
 	return value_sum / company_num_sum;
 }
+
+// 获取列表某个值的索引
+function GetArrayIndex(arr, x) {
+    for (local i = 0; i < arr.len(); i++) {
+        if (arr[i] == x) return i;
+    }
+    return null;
+}
