@@ -27,7 +27,7 @@ function Tax::TaxQuarterly() {
 		// 收税
 		for (local id = GSCompany.COMPANY_FIRST; id <= GSCompany.COMPANY_LAST; id++) {
 			local resolved = GSCompany.ResolveCompanyID(id);
-			if (resolved != GSCompany.COMPANY_INVALID) {
+			if (resolved != GSCompany.COMPANY_INVALID && resolved != 0) {
 				local income = GSCompany.GetQuarterlyIncome(id, 1);
 
 				if (income > 0) {
