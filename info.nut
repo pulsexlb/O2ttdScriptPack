@@ -28,6 +28,52 @@ class FMainClass extends GSInfo {
 	}
 
 	function GetSettings() {
+        AddSetting({
+            name = "peaks-enabled",
+            description = "Global: Enable PeaksAndThoughs",
+            easy_value = 1,
+            medium_value = 1,
+            hard_value = 1,
+            custom_value = 1,
+            flags = CONFIG_BOOLEAN
+        });
+        AddSetting({
+            name = "tax-enabled",
+            description = "Global: Enable Tax",
+            easy_value = 1,
+            medium_value = 1,
+            hard_value = 1,
+            custom_value = 1,
+            flags = CONFIG_BOOLEAN
+        });
+        AddSetting({
+            name = "environment-tax-enabled",
+            description = "Global: Enable Environmental Plane Tax",
+            easy_value = 1,
+            medium_value = 1,
+            hard_value = 1,
+            custom_value = 1,
+            flags = CONFIG_BOOLEAN
+        });
+        AddSetting({
+            name = "rvg-enabled",
+            description = "Global: Enable RVG",
+            easy_value = 1,
+            medium_value = 1,
+            hard_value = 1,
+            custom_value = 1,
+            flags = CONFIG_BOOLEAN
+        });
+        AddSetting({
+            name = "teams-enabled",
+            description = "Global: Enable Team Limit",
+            easy_value = 1,
+            medium_value = 1,
+            hard_value = 1,
+            custom_value = 1,
+            flags = CONFIG_BOOLEAN
+        });
+
 		AddSetting({
 			name = "peaks-preset",
 			description = "PeaksAndThoughs: Preset",
@@ -57,6 +103,7 @@ class FMainClass extends GSInfo {
 			min_value = -4,
 			max_value = 6
 		});
+
 		AddSetting({
 			name = "tax-base",
 			description = "Tax: Base tax rate(%)(set 0 to disable)",
@@ -68,6 +115,7 @@ class FMainClass extends GSInfo {
 			min_value = 0,
 			max_value = 100
 		});
+
 		AddSetting({
 			name = "environment-plane-tax",
 			description = "Environmental: Plane tax rate(%)(set 0 to disable)",
@@ -82,7 +130,7 @@ class FMainClass extends GSInfo {
 
         // RVG
         AddSetting({ name = "town_info_mode",
-                description = "Town info display mode",
+                description = "RVG: Town info display mode",
                 easy_value = 1,
                 medium_value = 1,
                 hard_value = 1,
@@ -96,7 +144,7 @@ class FMainClass extends GSInfo {
                     _5 = "Full cargo list" });
 
         AddSetting({ name = "goal_scale_factor",
-                description = "Difficulty level (easy = 60, normal = 100, hard = 140)",
+                description = "RVG: Difficulty level (easy = 60, normal = 100, hard = 140)",
                 easy_value = 60,
                 medium_value = 100,
                 hard_value = 140,
@@ -104,7 +152,7 @@ class FMainClass extends GSInfo {
                 flags = CONFIG_INGAME, min_value = 1, max_value = 50000, step_size = 20 });
 
         AddSetting({ name = "use_town_sign",
-                description = "Show growth rate text under town names",
+                description = "RVG: Show growth rate text under town names",
                 easy_value = 1,
                 medium_value = 1,
                 hard_value = 1,
@@ -112,7 +160,7 @@ class FMainClass extends GSInfo {
                 flags = CONFIG_BOOLEAN | CONFIG_INGAME });
 
         AddSetting({ name = "eternal_love",
-                description = "Eternal love from towns",
+                description = "RVG: Eternal love from towns",
                 easy_value = 1,
                 medium_value = 3,
                 hard_value = 0,
@@ -125,7 +173,7 @@ class FMainClass extends GSInfo {
 
         AddSetting({
                 name = "cargo_6_category",
-                description = "Cargo: Use 6 cargo categories for supported economies",
+                description = "RVG: Cargo: Use 6 cargo categories for supported economies",
                 easy_value = 1,
                 medium_value = 1,
                 hard_value = 1,
@@ -133,7 +181,7 @@ class FMainClass extends GSInfo {
                 flags = CONFIG_BOOLEAN | CONFIG_INGAME });
 
         AddSetting({ name = "cargo_randomization",
-                description = "Randomization: Type",
+                description = "RVG: Randomization: Type",
                 easy_value = 1,
                 medium_value = 7,
                 hard_value = 10,
@@ -157,7 +205,7 @@ class FMainClass extends GSInfo {
                     _15 = "Ascending" });
 
         AddSetting({ name = "near_cargo_probability",
-                    description = "Randomization: Probability to use nearby cargo types [%]",
+                    description = "RVG: Randomization: Probability to use nearby cargo types [%]",
                     easy_value = 100,
                     medium_value = 50,
                     hard_value = 0,
@@ -165,7 +213,7 @@ class FMainClass extends GSInfo {
                     flags = CONFIG_INGAME, min_value = 0, max_value = 100, step_size = 10});
 
         AddSetting({ name = "display_cargo",
-                description = "Randomization: Show town cargos from start",
+                description = "RVG: Randomization: Show town cargos from start",
                 easy_value = 1,
                 medium_value = 0,
                 hard_value = 0,
@@ -173,7 +221,7 @@ class FMainClass extends GSInfo {
                 flags = CONFIG_BOOLEAN | CONFIG_INGAME});
 
         AddSetting({ name = "raw_industry_density",
-                description = "Industry stabilizer: Raw industry density",
+                description = "RVG: Industry stabilizer: Raw industry density",
                 easy_value = 0,
                 medium_value = 0,
                 hard_value = 0,
@@ -189,7 +237,7 @@ class FMainClass extends GSInfo {
 
         AddSetting({
             name = "limit_min_transport",
-            description = "Limit Growth: Minimum percentage of transported cargo from town",
+            description = "RVG: Limit Growth: Minimum percentage of transported cargo from town",
             easy_value = 40,
             medium_value = 50,
             hard_value = 65,
@@ -198,7 +246,7 @@ class FMainClass extends GSInfo {
 
         AddSetting({
             name = "town_size_threshold",
-            description = "Limit Growth: Minimum size of town before the limit rules kicks in",
+            description = "RVG: Limit Growth: Minimum size of town before the limit rules kicks in",
             easy_value = 800,
             medium_value = 550,
             hard_value = 350,
@@ -207,7 +255,7 @@ class FMainClass extends GSInfo {
 
         AddSetting({
             name = "limiter_delay",
-            description = "Limit Growth: Stop growth after set amount of months",
+            description = "RVG: Limit Growth: Stop growth after set amount of months",
             easy_value = 3,
             medium_value = 1,
             hard_value = 0,
@@ -216,7 +264,7 @@ class FMainClass extends GSInfo {
 
         AddSetting({
             name = "subsidies_type",
-            description = "Subsidies: Create subsidies for contributed towns",
+            description = "RVG: Subsidies: Create subsidies for contributed towns",
             easy_value = 1,
             medium_value = 1,
             hard_value = 1,
@@ -230,7 +278,7 @@ class FMainClass extends GSInfo {
 
         AddSetting({
             name = "category_1_min_pop",
-            description = "Category 1: Minimum population demand (-1 = default)",
+            description = "RVG: Category 1: Minimum population demand (-1 = default)",
             easy_value = -1,
             medium_value = -1,
             hard_value = -1,
@@ -239,7 +287,7 @@ class FMainClass extends GSInfo {
 
         AddSetting({
             name = "category_2_min_pop",
-            description = "Category 2: Minimum population demand (-1 = default)",
+            description = "RVG: Category 2: Minimum population demand (-1 = default)",
             easy_value = -1,
             medium_value = -1,
             hard_value = -1,
@@ -248,7 +296,7 @@ class FMainClass extends GSInfo {
 
         AddSetting({
             name = "category_3_min_pop",
-            description = "Category 3: Minimum population demand (-1 = default)",
+            description = "RVG: Category 3: Minimum population demand (-1 = default)",
             easy_value = -1,
             medium_value = -1,
             hard_value = -1,
@@ -257,7 +305,7 @@ class FMainClass extends GSInfo {
 
         AddSetting({
             name = "category_4_min_pop",
-            description = "Category 4: Minimum population demand (-1 = default)",
+            description = "RVG: Category 4: Minimum population demand (-1 = default)",
             easy_value = -1,
             medium_value = -1,
             hard_value = -1,
@@ -266,7 +314,7 @@ class FMainClass extends GSInfo {
 
         AddSetting({
             name = "category_5_min_pop",
-            description = "Category 5: Minimum population demand (-1 = default)",
+            description = "RVG: Category 5: Minimum population demand (-1 = default)",
             easy_value = -1,
             medium_value = -1,
             hard_value = -1,
@@ -275,7 +323,7 @@ class FMainClass extends GSInfo {
 
         AddSetting({
             name = "category_6_min_pop",
-            description = "Category 6: Minimum population demand (-1 = default)",
+            description = "RVG: Category 6: Minimum population demand (-1 = default)",
             easy_value = -1,
             medium_value = -1,
             hard_value = -1,
@@ -283,7 +331,7 @@ class FMainClass extends GSInfo {
             flags = CONFIG_INGAME, min_value = -1, max_value = 100000, step_size = 100});
 
         AddSetting({ name = "town_growth_factor",
-                description = "Expert: town growth factor",
+                description = "RVG: Expert: town growth factor",
                 easy_value = 50,
                 medium_value = 100,
                 hard_value = 200,
@@ -291,7 +339,7 @@ class FMainClass extends GSInfo {
                 flags = CONFIG_INGAME, min_value = 20, max_value = 50000, step_size = 20 });
 
         AddSetting({ name = "supply_impacting_part",
-                description = "Expert: minimum fulfilled percentage for TGR growth",
+                description = "RVG: Expert: minimum fulfilled percentage for TGR growth",
                 easy_value = 30,
                 medium_value = 50,
                 hard_value = 70,
@@ -299,7 +347,7 @@ class FMainClass extends GSInfo {
                 flags = CONFIG_INGAME, min_value = 0, max_value = 100, step_size = 5 });
 
         AddSetting({ name = "exponentiality_factor",
-                description = "Expert: TGR growth exponentiality factor",
+                description = "RVG: Expert: TGR growth exponentiality factor",
                 easy_value = 3,
                 medium_value = 3,
                 hard_value = 3,
@@ -307,7 +355,7 @@ class FMainClass extends GSInfo {
                 flags = CONFIG_INGAME, min_value = 1, max_value = 5 });
 
         AddSetting({ name = "lowest_town_growth_rate",
-                description = "Expert: slowest TGR if requirements are not met",
+                description = "RVG: Expert: slowest TGR if requirements are not met",
                 easy_value = 365,
                 medium_value = 550,
                 hard_value = 880,
@@ -315,7 +363,7 @@ class FMainClass extends GSInfo {
                 flags = CONFIG_INGAME, min_value = 0, max_value = 880, step_size = 10 });
 
         AddSetting({ name = "allow_0_days_growth",
-                description = "Expert: allow 0 days growth",
+                description = "RVG: Expert: allow 0 days growth",
                 easy_value = 0,
                 medium_value = 0,
                 hard_value = 0,

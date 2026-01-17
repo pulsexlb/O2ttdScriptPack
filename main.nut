@@ -31,26 +31,28 @@ function MainClass::Start() {
 	this._plane_tax_rate = MainClass.GetSetting("environment-plane-tax");
 	if (!_data_loaded) {
 		// tax
-		this.tax = Tax(this._tax_base_rate, null);
+        if (MainClass.GetSetting("tax-enabled")) {this.tax = Tax(this._tax_base_rate, null);}
 
 		// environmental
-		this.environmental = Environmental(this._plane_tax_rate);
+        if (MainClass.GetSetting("environment-tax-enabled")) {this.environmental = Environmental(this._plane_tax_rate);}
 
 		// peaks and thoughs
-		local preset_setting = MainClass.GetSetting("peaks-preset");
-		local base_rates = MainClass.GetSetting("peaks-base");
-		this.peaks_and_thoughs = PeaksAndThoughs(preset_setting, base_rates);
+        if (MainClass.GetSetting("peaks-enabled")) {
+            local preset_setting = MainClass.GetSetting("peaks-preset");
+            local base_rates = MainClass.GetSetting("peaks-base");
+            this.peaks_and_thoughs = PeaksAndThoughs(preset_setting, base_rates);
+        }
 
         // team limit
-        this.team_limit = TeamLimit();
+        if (MainClass.GetSetting("teams-enabled")) {this.team_limit = TeamLimit();}
 
         // rvg
-        this.rvg = RVG();
+        if (MainClass.GetSetting("rvg-enabled")) {this.rvg = RVG();}
 
 		this._data_loaded = true;
 	}
 
-    this.rvg.Start();
+    if (MainClass.GetSetting("rvg-enabled")) {this.rvg.Start();}
 
 	// 存储上一次处理的经济月份
 	local last_loop_date = GSDate.GetCurrentDate();
@@ -79,9 +81,9 @@ function MainClass::Start() {
 		last_loop_tick = current_tick
 
 		this.HandleEvents();
-
-        this.team_limit.Run();
-        this.rvg.Run();
+        
+        if (MainClass.GetSetting("teams-enabled")) {this.team_limit.Run();}
+        if (MainClass.GetSetting("rvg-enabled")) {this.rvg.Run();}
 
 		GSController.Sleep(1);
 	}
@@ -95,7 +97,7 @@ function MainClass::HandleEvents() {
 		local ev_type = ev.GetEventType();
 
         // 发送给rvg
-        this.rvg.HandleEvents(ev_type);
+        if (MainClass.GetSetting("rvg-enabled")) {this.rvg.HandleEvents(ev_type);}
 
 		switch (ev_type) {
 			// 公司新建
@@ -112,11 +114,13 @@ function MainClass::HandleEvents() {
                                     GSText(GSText.SCRIPT_INTRODUCE_OTHER_MATTERS)));
                     GSCompany.ChangeBankBalance(company_id, GetAverageValue(1), GSCompany.EXPENSES_OTHER, GSMap.TILE_INVALID);
 
-                    local company_mode = GSCompanyMode(company_id);
-                    local name = GSCompany.GetName(company_id);
-                    GSCompany.SetName("[Team " + team_number + "]" + name);
-                    if (!(company_id in this._system_set_name)){
-                        _system_set_name.push(company_id);
+                    if (MainClass.GetSetting("teams-enabled")) {
+                        local company_mode = GSCompanyMode(company_id);
+                        local name = GSCompany.GetName(company_id);
+                        GSCompany.SetName("[Team " + team_number + "]" + name);
+                        if (!(company_id in this._system_set_name)){
+                            _system_set_name.push(company_id);
+                        }
                     }
 
                 } else {
@@ -137,10 +141,12 @@ function MainClass::HandleEvents() {
                 local company_new_name = company_event.GetNewName();
                 local company_mode = GSCompanyMode(company_id);
                 if (company_id != 0){
-                    local team_number = company_id % 2 + 1
-                    GSCompany.SetName("[Team " + team_number + "]" + company_new_name);
-                    if (!(company_id in this._system_set_name)){
-                        _system_set_name.push(company_id);
+                    if (MainClass.GetSetting("teams-enabled")) {
+                        local team_number = company_id % 2 + 1
+                        GSCompany.SetName("[Team " + team_number + "]" + company_new_name);
+                        if (!(company_id in this._system_set_name)){
+                            _system_set_name.push(company_id);
+                        }
                     }
                 }
                 break;
@@ -151,25 +157,33 @@ function MainClass::HandleEvents() {
 
 function MainClass::EndOfMonth(month) {
 	// 收税
-	this.tax.TaxQuarterly();
+	if (MainClass.GetSetting("tax-enabled")) {this.tax.TaxQuarterly();}
 }
 
 function MainClass::EndOfYear(year) {
 	// 环保税
-	this.environmental.TaxPlaneYearAnnual();
+    if (MainClass.GetSetting("environment-tax-enabled")) { this.environmental.TaxPlaneYearAnnual(); }
 
 }
 
 function MainClass::EndOfHour(hour) {
 	// 动态客流
-	this.peaks_and_thoughs.Run(hour);
+    if (MainClass.GetSetting("peaks-enabled")) {this.peaks_and_thoughs.Run(hour);}
 }
 
 function MainClass::Save() {
 	GSLog.Info("Saving game...");
+    local rvg = {};
+    if (MainClass.GetSetting("rvg-enabled")) {
+        rvg = this.rvg.Save();
+    }
+    local tax = {};
+    if (MainClass.GetSetting("tax-enabled")) {
+        tax = this.tax.SaveGameData();
+    }
 	return {
-		tax = this.tax.SaveGameData()
-        rvg = this.rvg.Save()
+		tax = tax
+        rvg = rvg
 	};
 }
 
@@ -177,32 +191,40 @@ function MainClass::Load(version, data) {
 	GSLog.Info("Loading data from savegame made with version " + version + " of the game script");
 
 	// tax
-	local base_rates = MainClass.GetSetting("tax-base");
-	if (data.rawin("tax")) {
-		local tax_data = data.rawget("tax");
-		this.tax = Tax(base_rates, tax_data);
-		GSLog.Info("Found tax data in save file");
-	} else {
-		this.tax = Tax(base_rates, null);
-		GSLog.Warning("No tax data found - initialising new tax")
-	}
+    if (MainClass.GetSetting("tax-enabled")) {
+        local base_rates = MainClass.GetSetting("tax-base");
+        if (data.rawin("tax")) {
+            local tax_data = data.rawget("tax");
+            this.tax = Tax(base_rates, tax_data);
+            GSLog.Info("Found tax data in save file");
+        } else {
+            this.tax = Tax(base_rates, null);
+            GSLog.Warning("No tax data found - initialising new tax")
+        }
+    }
 
 	// environmental
-	local plane_tax_rate = MainClass.GetSetting("environment-plane-tax");
-	this.environmental = Environmental(plane_tax_rate);
+    if (MainClass.GetSetting("environment-tax-enabled")) {
+        local plane_tax_rate = MainClass.GetSetting("environment-plane-tax");
+        this.environmental = Environmental(plane_tax_rate);
+    }
 
 	// peaks and thoughs
-	local preset_setting = MainClass.GetSetting("peaks-preset");
-	local base_rates = MainClass.GetSetting("peaks-base");
-	this.peaks_and_thoughs = PeaksAndThoughs(preset_setting, base_rates);
+    if (MainClass.GetSetting("peaks-enabled")) {
+        local preset_setting = MainClass.GetSetting("peaks-preset");
+        local base_rates = MainClass.GetSetting("peaks-base");
+        this.peaks_and_thoughs = PeaksAndThoughs(preset_setting, base_rates);
+    }
 
     // team limit
-    this.team_limit = TeamLimit();
+    if (MainClass.GetSetting("teams-enabled")) {this.team_limit = TeamLimit();}
 
     // rvg
-    this.rvg = RVG();
-    local rvg_data = data.rawget("rvg");
-    this.rvg.Load(version, rvg_data);
+    if (MainClass.GetSetting("rvg-enabled")) {
+        this.rvg = RVG();
+        local rvg_data = data.rawget("rvg");
+        this.rvg.Load(version, rvg_data);
+    }
 
 	this._data_loaded = true;
 }
