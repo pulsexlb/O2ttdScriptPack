@@ -6,6 +6,7 @@ require("tax.nut");
 require("environmental.nut")
 require("peaks-and-thoughs.nut")
 require("team_limit.nut")
+require("rvg/main.nut")
 
 // 主游戏
 class MainClass extends GSController {
@@ -14,6 +15,7 @@ class MainClass extends GSController {
 	environmental = null;
     team_limit = null;
 	peaks_and_thoughs = null;
+    rvg = null;
 	_tax_base_rate = null;
 	_plane_tax_rate = null;
     _system_set_name = []; // 上个事件处理后由脚本设置的公司名称的公司id列表(防止重复处理)
@@ -42,8 +44,13 @@ function MainClass::Start() {
         // team limit
         this.team_limit = TeamLimit();
 
+        // rvg
+        this.rvg = RVG();
+
 		this._data_loaded = true;
 	}
+
+    this.rvg.Start();
 
 	// 存储上一次处理的经济月份
 	local last_loop_date = GSDate.GetCurrentDate();
@@ -74,6 +81,7 @@ function MainClass::Start() {
 		this.HandleEvents();
 
         this.team_limit.Run();
+        this.rvg.Run();
 
 		GSController.Sleep(1);
 	}
@@ -85,6 +93,10 @@ function MainClass::HandleEvents() {
 		if (ev == null) continue;
 
 		local ev_type = ev.GetEventType();
+
+        // 发送给rvg
+        this.rvg.HandleEvents(ev_type);
+
 		switch (ev_type) {
 			// 公司新建
 			case GSEvent.ET_COMPANY_NEW: {
@@ -157,6 +169,7 @@ function MainClass::Save() {
 	GSLog.Info("Saving game...");
 	return {
 		tax = this.tax.SaveGameData()
+        rvg = this.rvg.Save()
 	};
 }
 
@@ -185,6 +198,11 @@ function MainClass::Load(version, data) {
 
     // team limit
     this.team_limit = TeamLimit();
+
+    // rvg
+    this.rvg = RVG();
+    local rvg_data = data.rawget("rvg");
+    this.rvg.Load(version, rvg_data);
 
 	this._data_loaded = true;
 }
