@@ -116,6 +116,18 @@ class FMainClass extends GSInfo {
 			max_value = 100
 		});
 
+        AddSetting({
+			name = "tax-max-rate",
+			description = "Tax: Max tax rate(%)",
+			easy_value = 30,
+			medium_value = 50,
+			hard_value = 70,
+			custom_value = 100,
+			flags = CONFIG_INGAME,
+			min_value = 0,
+			max_value = 1000
+		});
+
 		AddSetting({
 			name = "environment-plane-tax",
 			description = "Environmental: Plane tax rate(%)(set 0 to disable)",

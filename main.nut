@@ -17,6 +17,7 @@ class MainClass extends GSController {
 	peaks_and_thoughs = null;
     rvg = null;
 	_tax_base_rate = null;
+    _tax_max_rate = null;
 	_plane_tax_rate = null;
     _system_set_name = []; // 上个事件处理后由脚本设置的公司名称的公司id列表(防止重复处理)
 	constructor() {}
@@ -28,10 +29,11 @@ function MainClass::Start() {
 
 
 	this._tax_base_rate = MainClass.GetSetting("tax-base");
+    this._tax_max_rate = MainClass.GetSetting("tax-max-rate");
 	this._plane_tax_rate = MainClass.GetSetting("environment-plane-tax");
 	if (!_data_loaded) {
 		// tax
-        if (MainClass.GetSetting("tax-enabled")) {this.tax = Tax(this._tax_base_rate, null);}
+        if (MainClass.GetSetting("tax-enabled")) {this.tax = Tax(this._tax_base_rate, this._tax_max_rate, null);}
 
 		// environmental
         if (MainClass.GetSetting("environment-tax-enabled")) {this.environmental = Environmental(this._plane_tax_rate);}
@@ -193,9 +195,10 @@ function MainClass::Load(version, data) {
 	// tax
     if (MainClass.GetSetting("tax-enabled")) {
         local base_rates = MainClass.GetSetting("tax-base");
+        local max_rates = MainClass.GetSetting("tax-max-rate");
         if (data.rawin("tax")) {
             local tax_data = data.rawget("tax");
-            this.tax = Tax(base_rates, tax_data);
+            this.tax = Tax(base_rates, max_rates, tax_data);
             GSLog.Info("Found tax data in save file");
         } else {
             this.tax = Tax(base_rates, null);

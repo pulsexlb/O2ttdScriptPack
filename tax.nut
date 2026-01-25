@@ -5,14 +5,16 @@ class Tax {
 	quarter = 0;
 	next_tax_loop = 2;
 	base_rate = null;
-	constructor(base_rate, data) {
+    max_rate = null;
+	constructor(base_rate, max_rate, data) {
 		if (data) {
 			this.quarter = data.quarter;
 			this.next_tax_loop = data.next_tax_loop;
 			GSLog.Info("Loaded previous tax quarter = " + this.quarter + " next_tax_loop = " + this.next_tax_loop);
 		}
 		this.base_rate = base_rate.tofloat() / 100.0;
-		GSLog.Info("base_Rate" + base_rate + " " + this.base_rate);
+        this.max_rate = max_rate.tofloat() / 100.0;
+		GSLog.Info("base_Rate" + base_rate + " " + this.base_rate + " max_rate " + max_rate + " " + this.max_rate);
 	}
 }
 
@@ -33,10 +35,13 @@ function Tax::TaxQuarterly() {
 				if (income > 0) {
 					local current_value = GSCompany.GetQuarterlyCompanyValue(id, 1);
 					local tax_rate = this.base_rate * current_value / average_value;
+                    if (tax_rate > this.max_rate) {
+                        tax_rate = this.max_rate;
+                    }
 
 					local tax_amount = (income * tax_rate).tointeger();
 
-					GSLog.Info("Company " + id + " base rate: " + this.base_rate + " tax rate: " + tax_rate + ", income: " + income + ", tax: " + tax_amount);
+					GSLog.Info("Company " + id + " base rate: " + this.base_rate + " tax rate: " + tax_rate + ", income: " + income + ", tax: " + tax_amount + " (current value: " + current_value + ", average value: " + average_value + ")");
 
 					// 从公司账户扣除税款
 					GSCompany.ChangeBankBalance(id, -tax_amount, GSCompany.EXPENSES_OTHER, GSMap.TILE_INVALID);
