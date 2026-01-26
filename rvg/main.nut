@@ -201,9 +201,9 @@ function RVG::Init()
     return InitError.NONE;
 }
 
-function RVG::HandleEvents(event_type)
+function RVG::HandleEvents(event)
 {
-    switch (event_type) {
+    switch (event.GetEventType()) {
         // On town founding, add a new GoalTown instance
         case GSEvent.ET_TOWN_FOUNDED:
             event = GSEventTownFounded.Convert(event);

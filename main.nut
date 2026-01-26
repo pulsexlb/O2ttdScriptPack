@@ -96,10 +96,10 @@ function MainClass::HandleEvents() {
 		local ev = GSEventController.GetNextEvent();
 		if (ev == null) continue;
 
-		local ev_type = ev.GetEventType();
-
         // 发送给rvg
-        if (MainClass.GetSetting("rvg-enabled")) {this.rvg.HandleEvents(ev_type);}
+        if (MainClass.GetSetting("rvg-enabled")) {this.rvg.HandleEvents(ev);}
+
+		local ev_type = ev.GetEventType();
 
 		switch (ev_type) {
 			// 公司新建
