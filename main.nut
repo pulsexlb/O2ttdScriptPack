@@ -117,7 +117,7 @@ function MainClass::HandleEvents() {
                 if (company_id != 0){
                     local team_number = company_id % 2 + 1
                     Story.ShowMessage(company_id, GSText(GSText.WELCOME_MESSAGE, company_id, team_number,
-                                    GSText(GSText.SCRIPT_INTRODUCE_NEW_TAX, this._tax_base_rate),
+                                    GSText(GSText.SCRIPT_INTRODUCE_NEW_TAX, this._tax_base_rate, this._tax_max_rate),
                                     GSText(GSText.SCRIPT_INTRODUCE_ENVIRONMENTALISM, this._plane_tax_rate),
                                     GSText(GSText.SCRIPT_INTRODUCE_TEAMS_INFRASTRUCTURE_SHARING),
                                     GSText(GSText.SCRIPT_INTRODUCE_OTHER_MATTERS)));

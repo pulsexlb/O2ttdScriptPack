@@ -1,5 +1,5 @@
 WELCOME_MESSAGE :欢迎{COMPANY}！你的队伍是{NUM}队。以下为脚本内容：{}{}{RED}新的税法{}{STRING}{}{}{RED}环保主义{}{STRING}{}{}{RED}团队&基建共享{}{STRING}{}{}{RED}其他事项{}{STRING}
-SCRIPT_INTRODUCE_NEW_TAX :{BLACK}为了维护游戏平衡，我们为游戏带来了新的税法。在游戏完成一个经济周期后，脚本将按照公式{BLUE}税收=基本税率*(您公司的市值/全部公司平均市值)*本季度收入{BLACK}对您的公司进行所得税扣税，其中，当前基本税率为{NUM}%
+SCRIPT_INTRODUCE_NEW_TAX :{BLACK}为了维护游戏平衡，我们为游戏带来了新的税法。在游戏完成一个经济周期后，脚本将按照公式{BLUE}税收=基本税率*(您公司的市值/全部公司平均市值)*本季度收入{BLACK}对您的公司进行所得税扣税，其中，当前基本税率为{NUM}%，最大税率为{NUM}%
 SCRIPT_INTRODUCE_ENVIRONMENTALISM :{BLACK}为了尽可能减少交通运输业对环境的影响，在经济年末，对每个公司的全部飞机收取其益损的一定额度的环保税，当前设置为{NUM}%
 SCRIPT_INTRODUCE_TEAMS_INFRASTRUCTURE_SHARING :{BLACK}服务器依照公司id为公司分配团队，通常，偶数公司(即第2 4 6个创建的公司)为1队，奇数公司(即第3 5 7个创建的公司)为2队。服务器的第0个公司(即第1个创建的公司)不属于任何一队。{}服务器鼓励并支持基建共享，也准许不同队伍的玩家进行基建共享，请玩家核查服务器基建共享的价格设置{}请注意，在此脚本中，{BLUE}不同队伍的载具可以在自己团队内的任意车站停靠，但不能在其它队伍的车站内停靠。所有队伍的车辆都可以在公司0的车站内停靠。{BLACK}如果你的载具的下一项调度计划不是属于你队伍的车站，脚本将自动删除该计划，并可能导致列车寻路失败
 SCRIPT_INTRODUCE_OTHER_MATTERS :{BLACK}-基于{BLUE}PeaksAndThoughs{BLACK}实现了24小时动态客流模拟{}{BLACK}-基于{BLUE}Renewed Village Growth{BLACK}实现城市发展控制{}{BLACK}-在你公司创建时，脚本会给予你一定额度为当前全部公司的平均市值的初始资金
