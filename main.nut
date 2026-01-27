@@ -70,9 +70,11 @@ function MainClass::Start() {
 			local hour = GSDate.GetHour(current_tick);
 
 			if (month != GSDate.GetMonth(last_loop_date)) {
+                GSLog.Info("End of month detected: " + month + " date: " + year + "-" + month);
 				this.EndOfMonth(month);
 			}
 			if (year != GSDate.GetYear(last_loop_date)) {
+                GSLog.Info("End of year detected: " + year + " last year: " + GSDate.GetYear(last_loop_date));
 				this.EndOfYear(year);
 			}
 			if (hour != GSDate.GetHour(last_loop_tick)) {
@@ -159,7 +161,7 @@ function MainClass::HandleEvents() {
 
 function MainClass::EndOfMonth(month) {
 	// 收税
-	if (MainClass.GetSetting("tax-enabled")) {this.tax.TaxQuarterly();}
+	if ((month == 1 || month == 4 || month == 7 || month == 10) && MainClass.GetSetting("tax-enabled")) {this.tax.TaxQuarterly();}
 }
 
 function MainClass::EndOfYear(year) {
