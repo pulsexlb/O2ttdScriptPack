@@ -74,8 +74,13 @@ function MainClass::Start() {
 				this.EndOfMonth(month);
 			}
 			if (year != GSDate.GetYear(last_loop_date)) {
-                GSLog.Info("End of year detected: " + year + " last year: " + GSDate.GetYear(last_loop_date));
-				this.EndOfYear(year);
+                if (year - GSDate.GetYear(last_loop_date) == 1) {
+                    GSLog.Info("End of year detected: " + year + " last year: " + GSDate.GetYear(last_loop_date));
+                    this.EndOfYear(year);
+                }
+                else {
+                    GSLog.Warning("Year jump detected from " + GSDate.GetYear(last_loop_date) + " to " + year);
+                }
 			}
 			if (hour != GSDate.GetHour(last_loop_tick)) {
 				this.EndOfHour(hour);
