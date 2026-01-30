@@ -9,7 +9,7 @@ class FMainClass extends GSInfo {
 		return "Some modify for openttd";
 	}
 	function GetVersion() {
-		return 1;
+		return 15;
 	}
 	function GetDate() {
 		return "2025.11.13";
