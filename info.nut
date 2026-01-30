@@ -1,3 +1,5 @@
+require("version.nut");
+
 class FMainClass extends GSInfo {
 	function GetAuthor() {
 		return "PulseX";
@@ -9,11 +11,14 @@ class FMainClass extends GSInfo {
 		return "Some modify for openttd";
 	}
 	function GetVersion() {
-		return 15;
+		return SELF_VERSION;
 	}
 	function GetDate() {
-		return "2025.11.13";
+		return SELF_DATE;
 	}
+    function MinVersionToLoad() {
+        return SELF_MINLOADVERSION; 
+    }
 	function CreateInstance() {
 		return "MainClass";
 	}

@@ -1,3 +1,4 @@
+require("../version.nut");
 require("cargo.nut");
 require("industry.nut");
 require("town.nut");
@@ -282,7 +283,7 @@ function RVG::Load(version, saved_data)
         }
     }
     else {
-        Log.Info("Save data format doesn't match with current version (saved " + saved_data.save_version + " vs current " + this.current_save_version + "). Resetting.", Log.LVL_INFO);
+        Log.Info("Save data format doesn't match with current version. Resetting.", Log.LVL_INFO);
     }
 }
 

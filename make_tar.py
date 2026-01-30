@@ -19,8 +19,20 @@ gs_name = "O2ttdScriptPack"
 
 
 # Script:
-mainversion = 1
-subversion = 5
+mainversion = -1
+subversion = -1
+with open("version.nut", 'r+') as file:
+    for line in file:
+        r = re.search('SELF_MAJORVERSION\s+<-\s+([0-9]+)', line)
+        if(r != None):
+            mainversion = r.group(1)
+        r2 = re.search('SELF_MINORVERSION\s+<-\s+([0-9]+)', line)
+        if(r2 != None):
+            subversion = r2.group(1)
+
+if(mainversion == -1 or subversion == -1):
+    print("Couldn't find " + gs_name + " version in info.nut!")
+    exit(-1)
 
 tmp_dir = gs_name + "-" + str(mainversion) + "." + str(subversion)
 tar_name = tmp_dir + ".tar"

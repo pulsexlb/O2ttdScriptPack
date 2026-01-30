@@ -31,6 +31,8 @@ function MainClass::Start() {
 	this._tax_base_rate = MainClass.GetSetting("tax-base");
     this._tax_max_rate = MainClass.GetSetting("tax-max-rate");
 	this._plane_tax_rate = MainClass.GetSetting("environment-plane-tax");
+    
+    GSLog.Info("base tax rate" + this._tax_base_rate + " max " + this._tax_max_rate);
 	if (!_data_loaded) {
 		// tax
         if (MainClass.GetSetting("tax-enabled")) {this.tax = Tax(this._tax_base_rate, this._tax_max_rate, null);}
